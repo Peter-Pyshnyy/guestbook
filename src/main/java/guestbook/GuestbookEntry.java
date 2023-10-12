@@ -16,6 +16,7 @@
 package guestbook;
 
 import java.time.LocalDateTime;
+import java.util.regex.Pattern;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,7 +35,7 @@ import org.springframework.util.Assert;
 class GuestbookEntry {
 
 	private @Id @GeneratedValue Long id;
-	private final String name, text;
+	private final String name, text, mail;
 	private final LocalDateTime date;
 
 	/**
@@ -42,13 +43,19 @@ class GuestbookEntry {
 	 *
 	 * @param name must not be {@literal null} or empty
 	 * @param text must not be {@literal null} or empty
+	 * @param mail must not be {@literal null} or empty
 	 */
-	public GuestbookEntry(String name, String text) {
+	public GuestbookEntry(String name, String text, String mail) {
 
 		Assert.hasText(name, "Name must not be null or empty!");
 		Assert.hasText(text, "Text must not be null or empty!");
+		Assert.hasText(mail, "Text must not be null or empty!");
+		Assert.isTrue(checkEMail(mail), "Invalid E-Mail!");
+		
+		System.out.print(checkEMail(mail));
 
-		this.name = name;
+		this.name = name + " (" + mail + ")";
+		this.mail = mail;
 		this.text = text;
 		this.date = LocalDateTime.now();
 	}
@@ -57,11 +64,16 @@ class GuestbookEntry {
 	private GuestbookEntry() {
 		this.name = null;
 		this.text = null;
+		this.mail = null;
 		this.date = null;
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public String getMail() {
+		return mail;
 	}
 
 	public Long getId() {
@@ -74,5 +86,10 @@ class GuestbookEntry {
 
 	public String getText() {
 		return text;
+	}
+
+	private boolean checkEMail(String email){
+		Pattern pattern = Pattern.compile("^(.+)@(.+)$");
+		return pattern.matcher(email).matches();
 	}
 }

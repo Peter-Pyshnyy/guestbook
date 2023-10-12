@@ -20,6 +20,7 @@ import io.github.wimdeblauwe.hsbt.mvc.HxRequest;
 import jakarta.validation.Valid;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.server.ResponseStatusException;
+
 
 /**
  * A controller to handle web requests to manage {@link GuestbookEntry}s
@@ -145,11 +147,11 @@ class GuestbookController {
 	@HxRequest
 	@PostMapping(path = "/guestbook")
 	HtmxResponse addEntry(@Valid GuestbookForm form, Model model) {
-
 		model.addAttribute("entry", guestbook.save(form.toNewEntry()));
 		model.addAttribute("index", guestbook.count());
 
 		return new HtmxResponse()
+				.addTemplate("guestbook :: save")
 				.addTemplate("guestbook :: entry")
 				.addTrigger("eventAdded");
 	}

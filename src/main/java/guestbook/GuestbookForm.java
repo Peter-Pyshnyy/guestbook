@@ -30,6 +30,7 @@ import jakarta.validation.constraints.NotBlank;
 class GuestbookForm {
 
 	private final @NotBlank String name;
+	private final @NotBlank String mail;
 	private final @NotBlank String text;
 
 	/**
@@ -40,11 +41,13 @@ class GuestbookForm {
 	 * {@link https://github.com/spring-projects/spring-framework/issues/22600} is resolved.
 	 *
 	 * @param name the value to bind to {@code name}
+	 * @param mail the value to bind to {@code mail}
 	 * @param text the value to bind to {@code text}
 	 */
-	public GuestbookForm(String name, String text) {
+	public GuestbookForm(String name, String text, String mail) {
 
 		this.name = name;
+		this.mail = mail;
 		this.text = text;
 	}
 
@@ -70,6 +73,10 @@ class GuestbookForm {
 		return text;
 	}
 
+	public String getMail(){
+		return mail;
+	}
+
 	/**
 	 * Returns a new {@link GuestbookEntry} using the data submitted in the request.
 	 *
@@ -77,6 +84,6 @@ class GuestbookForm {
 	 * @throws IllegalArgumentException if you call this on an instance without the name and text actually set.
 	 */
 	GuestbookEntry toNewEntry() {
-		return new GuestbookEntry(getName(), getText());
+		return new GuestbookEntry(getName(), getText(), getMail());
 	}
 }
